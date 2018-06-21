@@ -10,16 +10,16 @@ namespace _20180621
     {
         static void Main(string[] args)
         {
-            List<Person> personList = new List<Person>();
-            personList.Add(new Person()
-            {
-                Eye="黑色",
-                Mouth="一张",
-                Speak="各种语言"
-            });
-            Extend.ExtendTest(personList);
-            Extend.ExtendTest(new Person());
-
+            //List<Person> personList = new List<Person>();
+            //personList.Add(new Person()
+            //{
+            //    Eye="黑色",
+            //    Mouth="一张",
+            //    Speak="各种语言"
+            //});
+            //Extend.ExtendTest(personList);
+            //Extend.ExtendTest(new Person());
+            Extend.TestDynamic();
         }
 
     }
