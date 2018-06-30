@@ -18,17 +18,29 @@ namespace ExeclTool.Model
         /// </summary>
         public static IWorkbook ExcelWorkbook;
         /// <summary>
+        /// 0参构造函数
+        /// </summary>
+        public WorkBookStyle() : base(ExcelWorkbook)
+        {
+            ExcelWorkbook = new HSSFWorkbook();
+            base.BaseExcelWorkbook = ExcelWorkbook;
+            //初始化相关参数
+            ExeclColumnStyleList = new List<ExeclColumnStyle>();
+        }
+        /// <summary>
         /// 初始化相关参数
         /// </summary>
         /// <param name="columnsName">execl表头key是字段名，value是execl显示的title</param>
+
         public WorkBookStyle(Dictionary<string, string> columnsName) : base(ExcelWorkbook)
         {
             ExcelWorkbook = new HSSFWorkbook();
             base.BaseExcelWorkbook = ExcelWorkbook;
             //初始化相关参数
             ExeclColumnStyleList = new List<ExeclColumnStyle>();
-            ColumnsName = columnsName;
+            _columnsName = columnsName;
         }
+
         /// <summary>
         /// 构造函数，初始化标题和导出数量总数
         /// </summary>
@@ -44,14 +56,27 @@ namespace ExeclTool.Model
             this.ExeclColumnStyleList = new List<ExeclColumnStyle>();
             ColumnsName = columnsName;
         }
+        private Dictionary<string, string> _columnsName;
         /// <summary>
         /// execl工作簿表头列
         /// </summary>
-        public Dictionary<string, string> ColumnsName { set; get; }
+        public Dictionary<string, string> ColumnsName
+        {
+            set { _columnsName = value; }
+            get
+            {
+                return _columnsName;
+            }
+        }
+        /// <summary>
+        /// 冻结列区域
+        /// </summary>
+        public FreezePane FreezePane { set; get; }
         /// <summary>
         /// execl上的其他区域
         /// </summary>
         public List<AreaBlock> AreaBlockList { set; get; }
+
         /// <summary>
         /// execl的列对象格式
         /// </summary>
@@ -60,7 +85,7 @@ namespace ExeclTool.Model
         /// 当前execl的工作页
         /// </summary>
         public ISheet WorkSheet { set; get; }
-        private string _SheetName { set; get; }
+        private string _SheetName;
         /// <summary>
         /// 工作表名称
         /// </summary>
@@ -88,5 +113,6 @@ namespace ExeclTool.Model
             SheetName = sheetName;
             return newSheet;
         }
+
     }
 }

@@ -48,6 +48,7 @@
       <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.OpenXmlFormats.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
@@ -58,13 +59,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\ExeclTitleAttribute.cs" />
     <Compile Include="DataHelper.cs" />
     <Compile Include="ExcelHelper.cs" />
     <Compile Include="ExeclHelperExtend.cs" />
     <Compile Include="Model\AreaBlock.cs" />
     <Compile Include="Model\ExeclBase.cs" />
     <Compile Include="Model\ExeclColumnStyle.cs" />
+    <Compile Include="Model\ExeclDTOBase.cs" />
+    <Compile Include="Model\FreezePane.cs" />
     <Compile Include="Model\WorkBookStyle.cs" />
+    <Compile Include="ProductImportExeclHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

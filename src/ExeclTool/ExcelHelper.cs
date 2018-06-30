@@ -1,5 +1,4 @@
-﻿
-using ExeclTool.Model;
+﻿using ExeclTool.Model;
 using NPOI.HSSF.UserModel;
 using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
@@ -15,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Xml.Serialization;
+
 namespace ExeclTool
 {
     /// <summary>
@@ -22,12 +22,39 @@ namespace ExeclTool
     /// </summary>
     public static class ExcelHelper
     {
-
         /// <summary>
         /// 一个字节在excel中的宽度
         /// </summary>
-        private const int byteWidth = 650;
+        private static readonly int byteWidth = 650;
 
+        /// <summary>
+        /// execl的表头内容
+        /// </summary>
+        public static List<string> ExeclTitle { set; get; }
+        /// <summary>
+        ///     获取导入的workbook
+        /// </summary>
+        /// <param name="fs">文件流</param>
+        /// <param name="fileName">文件名</param>
+        /// <returns>导入的workbook</returns>
+        public static IWorkbook GetImportWorkBook(Stream fs, string fileName)
+        {
+            //工作簿
+            IWorkbook workbook = null;
+            if (fileName.IndexOf(".xlsx", StringComparison.Ordinal) > 0) // 2007版本
+            {
+                workbook = new XSSFWorkbook(fs);
+            }
+            else if (fileName.IndexOf(".xls", StringComparison.Ordinal) > 0) // 2003版本
+            {
+                workbook = new HSSFWorkbook(fs);
+            }
+            return workbook;
+        }
+
+  
+
+    
 
         /// <summary>
         ///     获取导入的sheet
@@ -52,7 +79,6 @@ namespace ExeclTool
         }
 
         
-
 
         /// <summary>
         /// 根据列名获取列索引
@@ -128,8 +154,117 @@ namespace ExeclTool
                 }
             }
         }
+        /// <summary>
+        /// 根据文件信息获取文件的table
+        /// </summary>
+        /// <param name="fileInfoDto">文件基本信息</param>
+        /// <param name="sheetIndex">sheet页</param>
+        /// <param name="headerRowIndex">表头行</param>
+        /// <returns></returns>
+        public static DataTable ImportExcel(string file, int sheetIndex, int headerRowIndex)
+        {
+            //文件判断
+            if (file == null )
+            {
+                //没有文件抛出异常
+                throw new Exception("");
+            }
+            //返回datatable对象
+            using (Stream stream = new MemoryStream())
+            {
+                return ImportExcel(stream, sheetIndex, headerRowIndex);
+            }
+        }
+        /// <summary>
+        /// 根据文件信息获取文件的对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="fileInfoDto"></param>
+        /// <param name="sheetIndex"></param>
+        /// <param name="headerRowIndex"></param>
+        /// <returns></returns>
+        public static IList<T> GetExeclDTO<T>(string flie, int sheetIndex, int headerRowIndex)
+        {
+            //得到Execl中的数据表
+            DataTable table = ExcelHelper.ImportExcel(flie, sheetIndex, headerRowIndex);
+            //将DataTable转成业务对象
+            return DataHelper.ModelConver<T>(table);
+        }
 
 
+        /// <summary>    
+        /// 由Excel导入到DataTable    
+        /// </summary>    
+        /// <param name="excelFileStream">Excel文件流</param>    
+        /// <param name="sheetIndex">获取工作簿序号</param>    
+        /// <param name="headerRowIndex">Excel表头行索引</param>    
+        /// <returns>DataTable</returns>    
+        public static DataTable ImportExcel(Stream excelFileStream, int sheetIndex, int headerRowIndex)
+        {
+            List<string> title = new List<string>();
+            try
+            {
+                IWorkbook workbook;
+                try
+                {
+                    workbook = new XSSFWorkbook(excelFileStream);//2007版本
+                }
+                catch
+                {
+                    workbook = new HSSFWorkbook(excelFileStream);//2003版本
+                }
+
+                ISheet sheet = workbook.GetSheetAt(sheetIndex);
+                DataTable table = new DataTable();
+                IRow headerRow = sheet.GetRow(headerRowIndex);
+                int cellCount = headerRow.LastCellNum;
+                for (int i = headerRow.FirstCellNum; i < cellCount; i++)
+                {
+                    string value = headerRow.GetCell(i).StringCellValue;
+                    DataColumn column = new DataColumn(value);
+                    title.Add(value);
+                    table.Columns.Add(column);
+                }
+                for (int i = (headerRowIndex + 1); i <= sheet.LastRowNum; i++)
+                {
+                    IRow row = sheet.GetRow(i);
+                    if (row == null)
+                        continue;
+
+                    DataRow dataRow = table.NewRow();
+                    for (int j = row.FirstCellNum; j < cellCount; j++)
+                    {
+                        dataRow[j] = row.GetCell(j) == null ? "" : row.GetCell(j).ToString().Trim();
+                    }
+
+                    //判断正行数据是否有效
+                    bool key = false;
+                    for (int ii = 0; ii < cellCount; ii++)
+                    {
+                        if (string.IsNullOrEmpty(dataRow[ii].ToString()) == false)
+                        {
+                            key = true;
+                            break;
+                        }
+                    }
+                    if (key)
+                    {
+                        table.Rows.Add(dataRow);
+                    }
+                }
+                workbook = null;
+                sheet = null;
+                return table;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"读取execl失败,错误信息：{e.Message}");
+            }
+            finally
+            {
+                excelFileStream.Close();
+            }
+        }
 
         /// <summary>
         /// 需要初始化设置的表头的列名（必须设置）
@@ -201,7 +336,7 @@ namespace ExeclTool
         /// </summary>
         /// <param name="excelWorkbook">工作簿</param>
         /// <returns></returns>
-        private static ICellStyle BorderCellStyle(IWorkbook excelWorkbook)
+        internal static ICellStyle BorderCellStyle(IWorkbook excelWorkbook)
         {
             ICellStyle style = excelWorkbook.CreateCellStyle();
             //单元格样式线
@@ -221,7 +356,7 @@ namespace ExeclTool
         /// </summary>
         /// <param name="excelWorkBook">工作簿</param>
         /// <param name="excelStream">文件流</param>
-        private static void SaveExcelFile(IWorkbook excelWorkBook, Stream excelStream)
+        internal static void SaveExcelFile(IWorkbook excelWorkBook, Stream excelStream)
         {
             excelWorkBook.Write(excelStream);
         }
@@ -239,7 +374,7 @@ namespace ExeclTool
         /// </summary>
         /// <param name="excelSheet">工作簿</param>
         /// <param name="style">表头样式</param>
-        private static void CreateHeader(ISheet excelSheet, ICellStyle style)
+        internal static void CreateHeader(ISheet excelSheet, ICellStyle style)
         {
             int cellIndex = 0;
             IRow newRow = excelSheet.CreateRow(0);
@@ -261,7 +396,7 @@ namespace ExeclTool
         /// <param name="excelSheet"></param>
         /// <param name="style"></param>
         /// <param name="execlWorkBookStyle"></param>
-        private static void CreateHeader(ISheet excelSheet, ICellStyle style, WorkBookStyle execlWorkBookStyle)
+        internal static void CreateHeader(ISheet excelSheet, ICellStyle style, WorkBookStyle execlWorkBookStyle)
         {
             List<ExeclColumnStyle> execlCellStyleList = execlWorkBookStyle.ExeclColumnStyleList;
             int cellIndex = 0, rowIndex;
@@ -283,6 +418,10 @@ namespace ExeclTool
                 else
                 {
                     newCell.CellStyle = style;//赋默认值
+                }
+                if ((execlCellStyle?.Width ?? 0) > 0)
+                {
+                    excelSheet.SetColumnWidth(cellIndex, execlCellStyle.Width);
                 }
                 cellIndex++;
             }
@@ -333,20 +472,14 @@ namespace ExeclTool
         /// <param name="rowCount">execl当前行</param>
         private static void InsertCell(DataTable dtSource, DataRow drSource, IRow currentExcelRow, WorkBookStyle execlWorkBookStyle, int rowCount)
         {
-            //样式集合
-            List<ExeclColumnStyle> execlCellStyleList = execlWorkBookStyle.ExeclColumnStyleList;
-            //工作薄
-            IWorkbook excelWorkBook = execlWorkBookStyle.BaseExcelWorkbook;
-            //工作表
-            ISheet excelSheet = execlWorkBookStyle.WorkSheet;
             int cellIndex = 0;
             foreach (var item in ListColumnsName)
             {
                 //列名称
                 string columnsName = item.Key.ToString();
                 //根据列名称设置列样式
-                ExeclColumnStyle execlCellStyle = execlCellStyleList?.FirstOrDefault(it => it.ColumnsName == columnsName) ?? null;
-                ICellStyle columnStyle = excelSheet.GetColumnStyle(cellIndex);
+                ExeclColumnStyle execlCellStyle = execlWorkBookStyle.ExeclColumnStyleList?.FirstOrDefault(it => it.ColumnsName == columnsName) ?? null;
+                ICellStyle columnStyle = execlWorkBookStyle.WorkSheet.GetColumnStyle(cellIndex);
 
                 //excelSheet.SetDefaultColumnStyle(cellIndex, SetExeclColumnStyle(columnStyle, excelWorkBook, execlCellStyle));
                 ICell newCell = null;
@@ -381,8 +514,8 @@ namespace ExeclTool
                         newCell = currentExcelRow.CreateCell(cellIndex);
                         newCell.SetCellValue(dateV);
                         //格式化显示
-                        ICellStyle cellStyle = excelWorkBook.CreateCellStyle();
-                        IDataFormat format = excelWorkBook.CreateDataFormat();
+                        ICellStyle cellStyle = execlWorkBookStyle.BaseExcelWorkbook.CreateCellStyle();
+                        IDataFormat format = execlWorkBookStyle.BaseExcelWorkbook.CreateDataFormat();
                         cellStyle.DataFormat = format.GetFormat("yyyy-mm-dd hh:mm:ss");
                         newCell.CellStyle = cellStyle;
                         break;
@@ -419,17 +552,17 @@ namespace ExeclTool
                 //设置列样式
                 if (execlCellStyle != null)
                 {
-                    SetColumnStyle(excelSheet, cellIndex, execlCellStyle);
+                    SetColumnStyle(execlWorkBookStyle.WorkSheet, cellIndex, execlCellStyle);
                     //设置单元格样式
                     SetExeclCellStyle(newCell, execlCellStyle);
                 }
                 //设置批注
                 if (string.IsNullOrWhiteSpace(errMsg) == false)
                 {
-                    SetComment(errMsg, currentExcelRow, newCell, excelWorkBook.GetCreationHelper(), (HSSFPatriarch)excelSheet.CreateDrawingPatriarch());
+                    SetComment(errMsg, currentExcelRow, newCell, execlWorkBookStyle);
                 }
                 //设置计算表达式
-                SetCellFormula(execlCellStyle, excelSheet, newCell, rowCount);
+                SetCellFormula(execlCellStyle, execlWorkBookStyle.WorkSheet, newCell, rowCount);
                 cellIndex++;
             }
         }
@@ -495,7 +628,7 @@ namespace ExeclTool
         /// <param name="execlWorkBookStyle"></param>
         public static void CreateAreaBlock(WorkBookStyle execlWorkBookStyle)
         {
-            if (execlWorkBookStyle.AreaBlockList != null && execlWorkBookStyle.AreaBlockList.Count > 0)
+            if (execlWorkBookStyle.AreaBlockList == null || execlWorkBookStyle.AreaBlockList.Count <= 0)
             {
                 return;
             }
@@ -574,9 +707,9 @@ namespace ExeclTool
         /// <param name="execlCell"></param>
         /// <param name="execlCellStyle"></param>
         /// <returns></returns>
-        private static void SetExeclCellStyle(ICell execlCell, ExeclColumnStyle execlCellStyle)
+        internal static void SetExeclCellStyle(ICell execlCell, ExeclColumnStyle execlCellStyle)
         {
-            if (execlCell != null && execlCell.CellStyle != null)
+            if (execlCell != null && execlCell.CellStyle != null && execlCellStyle != null)
             {
                 execlCell.CellStyle = execlCellStyle.CellStyle;
             }
@@ -587,17 +720,27 @@ namespace ExeclTool
         /// <param name="errMsg"></param>
         /// <param name="row"></param>
         /// <param name="cell"></param>
-        /// <param name="facktory"></param>
-        /// <param name="patr"></param>
-        public static void SetComment(string errMsg, IRow row, ICell cell, ICreationHelper facktory, HSSFPatriarch patr)
+        /// <param name="execlWorkBookStyle"></param>
+        public static void SetComment(string errMsg, IRow row, ICell cell, WorkBookStyle execlWorkBookStyle)
         {
+            //无错误信息不添加批注
+            if (string.IsNullOrEmpty(errMsg))
+            {
+                return;
+            }
+            ICreationHelper facktory = execlWorkBookStyle.BaseExcelWorkbook.GetCreationHelper();
+            HSSFPatriarch patr = (HSSFPatriarch)execlWorkBookStyle.WorkSheet.CreateDrawingPatriarch();
             var anchor = facktory.CreateClientAnchor();
+            //设置批注区间大小
             anchor.Col1 = cell.ColumnIndex;
             anchor.Col2 = cell.ColumnIndex + 3;
+            //设置列
             anchor.Row1 = row.RowNum;
             anchor.Row2 = row.RowNum + 5;
+            //创建批注区域
             var comment = patr.CreateCellComment(anchor);
             comment.String = new HSSFRichTextString(errMsg);
+            //设置批注作者
             comment.Author = ("mysoft");
             cell.CellComment = (comment);
         }
@@ -614,6 +757,34 @@ namespace ExeclTool
             CellRangeAddress cellRangeAddress = new CellRangeAddress(rowstart, rowend, colstart, colend);
             sheet.AddMergedRegion(cellRangeAddress);
         }
+
+        /// <summary>
+        /// 添加导入时候的其他列
+        /// </summary>
+        public static void AddOtherColumn()
+        {
+
+        }
+
+
+
+
         #endregion
+    }
+    /// <summary>
+    /// 实现排序接口，根据添加顺序导出
+    /// </summary>
+    public class NoSort : System.Collections.IComparer
+    {
+        /// <summary>
+        /// 自定义导出
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public int Compare(object x, object y)
+        {
+            return -1;
+        }
     }
 }
