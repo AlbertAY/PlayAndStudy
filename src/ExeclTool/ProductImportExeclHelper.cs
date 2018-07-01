@@ -90,7 +90,7 @@ namespace ExeclTool
             IWorkbook excelWorkbook = execlWorkBookStyle.BaseExcelWorkbook;
             int rowCount = execlWorkBookStyle.TitleRowIndex.HasValue ? execlWorkBookStyle.TitleRowIndex.Value : 0;
             //数据源导出数据集
-            ISheet newsheet = execlWorkBookStyle.CreateWorkSheet(execlWorkBookStyle.SheetName);
+            ISheet newsheet = execlWorkBookStyle.WorkSheet;
             //警告区域
             ExcelHelper.CreateAreaBlock(execlWorkBookStyle);
             ICellStyle style = ExcelHelper.BorderCellStyle(excelWorkbook);

@@ -161,19 +161,21 @@ namespace ExeclTool
         /// <param name="sheetIndex">sheet页</param>
         /// <param name="headerRowIndex">表头行</param>
         /// <returns></returns>
-        public static DataTable ImportExcel(string file, int sheetIndex, int headerRowIndex)
+        public static Tuple<DataTable, IWorkbook, List<ISheet>> ImportExcel(string path, int sheetIndex, int headerRowIndex)
         {
             //文件判断
-            if (file == null )
+            if (path == null )
             {
                 //没有文件抛出异常
                 throw new Exception("");
             }
             //返回datatable对象
-            using (Stream stream = new MemoryStream())
+            using (FileStream fs = File.OpenRead(path))
             {
-                return ImportExcel(stream, sheetIndex, headerRowIndex);
+                return ImportExcel(fs, sheetIndex, headerRowIndex);
             }
+            
+            
         }
         /// <summary>
         /// 根据文件信息获取文件的对象
@@ -183,23 +185,18 @@ namespace ExeclTool
         /// <param name="sheetIndex"></param>
         /// <param name="headerRowIndex"></param>
         /// <returns></returns>
-        public static IList<T> GetExeclDTO<T>(string flie, int sheetIndex, int headerRowIndex)
+        public static Tuple<IList<T>, IWorkbook, List<ISheet>> GetExeclDTO<T>(Stream flie, int sheetIndex, int headerRowIndex)
         {
             //得到Execl中的数据表
-            DataTable table = ExcelHelper.ImportExcel(flie, sheetIndex, headerRowIndex);
+            Tuple<DataTable, IWorkbook,List<ISheet>> result= ExcelHelper.ImportExcel(flie, sheetIndex, headerRowIndex);
             //将DataTable转成业务对象
-            return DataHelper.ModelConver<T>(table);
+            IList<T> list =  DataHelper.ModelConver<T>(result.Item1);
+            return Tuple.Create(list, result.Item2, result.Item3);
         }
 
 
-        /// <summary>    
-        /// 由Excel导入到DataTable    
-        /// </summary>    
-        /// <param name="excelFileStream">Excel文件流</param>    
-        /// <param name="sheetIndex">获取工作簿序号</param>    
-        /// <param name="headerRowIndex">Excel表头行索引</param>    
-        /// <returns>DataTable</returns>    
-        public static DataTable ImportExcel(Stream excelFileStream, int sheetIndex, int headerRowIndex)
+           
+        public static Tuple<DataTable, IWorkbook, List<ISheet>> ImportExcel(Stream excelFileStream, int sheetIndex, int headerRowIndex)
         {
             List<string> title = new List<string>();
             try
@@ -252,9 +249,9 @@ namespace ExeclTool
                         table.Rows.Add(dataRow);
                     }
                 }
-                workbook = null;
-                sheet = null;
-                return table;
+                List<ISheet> listSheet = new List<ISheet>();
+                listSheet.Add(sheet);
+                return Tuple.Create<DataTable, IWorkbook, List<ISheet>>(table, workbook, listSheet); 
             }
             catch (Exception e)
             {
