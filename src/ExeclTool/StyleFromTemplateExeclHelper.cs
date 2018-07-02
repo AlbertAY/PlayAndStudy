@@ -18,7 +18,7 @@ namespace ExeclTool
     /// <summary>
     /// 指标属性值
     /// </summary>
-    public class ProductImportExeclHelper
+    public class StyleFromTemplateExeclHelper
     {
         /// <summary>
         /// 一个字节在excel中的宽度
@@ -100,7 +100,11 @@ namespace ExeclTool
             {
                 rowCount++;
                 //创建行
-                IRow newRow = newsheet.CreateRow(rowCount);
+                IRow newRow = newsheet.GetRow(rowCount);
+                if (newRow == null)
+                {
+                    newRow = newsheet.CreateRow(rowCount);
+                }
                 //行数据添加
                 InsertCell(dr, newRow, execlWorkBookStyle, rowCount);
             }
@@ -183,8 +187,12 @@ namespace ExeclTool
                                                                             || (it.Title?.Equals(columnsName) ?? false));
                 //获取错误信息
                 errMsg = errorMessage != null ? errorMessage.ErrMsg : string.Empty;
+                newCell = currentExcelRow.GetCell(cellIndex);
+                if (newCell == null)
+                {
+                    newCell = currentExcelRow.CreateCell(cellIndex);
+                }
 
-                newCell = currentExcelRow.CreateCell(cellIndex);
                 //单元格内容处理
                 CellCreate(rowType, newCell, drValue, execlWorkBookStyle.BaseExcelWorkbook);
                 //设置列样式                
@@ -270,32 +278,13 @@ namespace ExeclTool
             int cellIndex = 0, rowIndex;
             //title所在行
             rowIndex = execlWorkBookStyle.TitleRowIndex.HasValue ? execlWorkBookStyle.TitleRowIndex.Value : 0;
-            IRow titleRow = excelSheet.GetRow(rowIndex);
-            if (titleRow == null)
-            {
-                titleRow = excelSheet.CreateRow(rowIndex);
-            }            
+            IRow newRow = excelSheet.GetRow(0);
             //循环导出列
             foreach (var de in ListColumnsName)
             {
-                ICell columnCell = titleRow.GetCell(cellIndex);
-                if (columnCell==null)
-                {
-                    columnCell = titleRow.CreateCell(cellIndex);
-                }
-                
-                columnCell.SetCellValue(de.Value.ToString());
-                //按表头文字的宽度
-                excelSheet.SetColumnWidth(cellIndex, de.Value.ToString().Length * byteWidth);
-                ExeclColumnStyle execlCellStyle = execlCellStyleList.FirstOrDefault(it => it.ColumnsName == de.Key);
-                if (execlCellStyle != null)
-                {
-                    columnCell.CellStyle = execlCellStyle.TitleStyle;//用户自定义表头样式                    
-                }
-                if ((execlCellStyle?.Width ?? 0) > 0)
-                {
-                    excelSheet.SetColumnWidth(cellIndex, execlCellStyle.Width);
-                }
+                ICell newCell = newRow.GetCell(cellIndex);
+                newCell.SetCellValue(de.Value.ToString());
+
                 cellIndex++;
             }
         }

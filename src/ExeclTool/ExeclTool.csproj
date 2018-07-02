@@ -69,6 +69,7 @@
     <Compile Include="Model\ExeclDTOBase.cs" />
     <Compile Include="Model\FreezePane.cs" />
     <Compile Include="Model\WorkBookStyle.cs" />
+    <Compile Include="StyleFromTemplateExeclHelper.cs" />
     <Compile Include="ProductImportExeclHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -76,6 +77,10 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="TestFile\测试工作簿.xls" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TestFile\Result\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

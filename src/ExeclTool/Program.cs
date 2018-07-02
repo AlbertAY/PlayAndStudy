@@ -1,4 +1,5 @@
 ﻿using ExeclTool.Model;
+using NPOI.SS.UserModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,14 +13,23 @@ namespace ExeclTool
     {
         static void Main(string[] args)
         {
-            string temptPath = @"C:\Users\Albert\Desktop\测试导入.xlsx";
+            string temptPath = @"E:\github\PlayAndStudy\src\ExeclTool\TestFile\测试工作簿.xls";
+
+            List<ISheet> sheetList;
+
+            IWorkbook iWorkbook;
+
             using (FileStream fs = File.OpenRead(temptPath))
             {
+                Tuple<IList<ExportModel>, IWorkbook, List<ISheet>> result = ExcelHelper.GetExeclDTO<ExportModel>(fs,0,0);
 
+                iWorkbook = result.Item2;
+
+                sheetList = result.Item3;
             }
 
             List<ExportModel> list = new List<ExportModel>();
-            int max = 20;
+            int max = 40;
             for (int i = 0; i < max; i++)
             {
                 list.Add(new ExportModel()
@@ -28,15 +38,19 @@ namespace ExeclTool
                     Age = i
                 });
             }
-            Dictionary<string, string> dicTitle = new Dictionary<string, string>();
-            dicTitle.Add("Name", "姓名");
-            dicTitle.Add("Age", "年龄");
+            //根据特性获取表头
+            Dictionary<string, string> dicTitle = DataHelper.GetExeclTitleByTitleAttribute<ExportModel>();
+
             WorkBookStyle workBookStyle = new WorkBookStyle(dicTitle);
-            MemoryStream memoryStream = ProductImportExeclHelper.ExportExcel(list, workBookStyle);
+            workBookStyle.BaseExcelWorkbook = iWorkbook;
 
-            string savePath = @"E:\测试文件";
+            workBookStyle.WorkSheet = sheetList.FirstOrDefault();
 
-            SaveToFile(memoryStream,savePath);
+            MemoryStream memoryStream = StyleFromTemplateExeclHelper.ExportExcel(list, workBookStyle);
+
+            //MemoryStream memoryStream = ProductImportExeclHelper.ExportExcel(list, workBookStyle);
+
+            SaveToFile(memoryStream,DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss-ffff") +".xls");
 
 
         }
@@ -45,8 +59,10 @@ namespace ExeclTool
         /// </summary>
         /// <param name="ms"></param>
         /// <param name="fullPath"></param>
-        public static void SaveToFile(MemoryStream ms, string fullPath)
+        public static void SaveToFile(MemoryStream ms, string fileName)
         {
+            string savePath = @"E:\github\PlayAndStudy\src\ExeclTool\TestFile\Result";
+            string fullPath = Path.Combine(savePath,fileName);
             string dirName = Path.GetDirectoryName(fullPath);
             if (!Directory.Exists(dirName))//判断是否存在
             {
@@ -66,10 +82,10 @@ namespace ExeclTool
 
     public class ExportModel
     {
-
+        [ExeclTitle("姓名")]
         public string Name { set; get; }
 
-
+        [ExeclTitle("年龄")]
         public int Age { get; set; }
 
     }
