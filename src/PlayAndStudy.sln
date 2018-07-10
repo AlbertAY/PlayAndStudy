@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "20180621", "Console\2018062
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExeclTool", "ExeclTool\ExeclTool.csproj", "{4C268A0A-9EF9-4658-9C44-534DBAAAED68}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordTool", "WordTool\WordTool.csproj", "{2D92975F-1CD1-44AB-AEEE-FC29F5446BC9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{4C268A0A-9EF9-4658-9C44-534DBAAAED68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C268A0A-9EF9-4658-9C44-534DBAAAED68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C268A0A-9EF9-4658-9C44-534DBAAAED68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D92975F-1CD1-44AB-AEEE-FC29F5446BC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D92975F-1CD1-44AB-AEEE-FC29F5446BC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D92975F-1CD1-44AB-AEEE-FC29F5446BC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D92975F-1CD1-44AB-AEEE-FC29F5446BC9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,6 +36,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{9BD38B8E-4609-4372-9B47-1F0CF4C5D24F} = {6BFFC5E4-BF04-474C-8606-177A590DF1D4}
 		{4C268A0A-9EF9-4658-9C44-534DBAAAED68} = {6BFFC5E4-BF04-474C-8606-177A590DF1D4}
+		{2D92975F-1CD1-44AB-AEEE-FC29F5446BC9} = {6BFFC5E4-BF04-474C-8606-177A590DF1D4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {416D924C-46F5-4000-96EC-468E1408F5ED}

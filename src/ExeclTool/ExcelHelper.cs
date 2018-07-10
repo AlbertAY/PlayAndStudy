@@ -213,8 +213,10 @@ namespace ExeclTool
 
                 ISheet sheet = workbook.GetSheetAt(sheetIndex);
                 DataTable table = new DataTable();
+                //获取头部信息
                 IRow headerRow = sheet.GetRow(headerRowIndex);
                 int cellCount = headerRow.LastCellNum;
+                //获取头部信息
                 for (int i = headerRow.FirstCellNum; i < cellCount; i++)
                 {
                     string value = headerRow.GetCell(i).StringCellValue;
