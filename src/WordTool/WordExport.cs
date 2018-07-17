@@ -11,7 +11,22 @@ namespace WordTool
     public class WordExport
     {
 
+        public void TestExport()
+        {
+            WorldField worldField = new WorldField(Guid.NewGuid());
 
+            FieldSource FieldSource = new FieldSource();
+
+
+
+        }
+
+
+
+
+
+
+        #region old test
         public void WordStart(string path)
         {
 
@@ -28,7 +43,6 @@ namespace WordTool
 
             }
         }
-
 
         private void FileChange(XWPFDocument doc)
         {
@@ -68,25 +82,12 @@ namespace WordTool
                     }
                 }
 
-
-                //foreach (XWPFTableCell cell in row.GetTableCells())
-                //{
-
-                //}
-
-
-
-
             }
 
 
 
 
         }
-
-
-
-
 
         /// <summary>
         /// 保存文件到硬盘上面
@@ -110,6 +111,7 @@ namespace WordTool
                 data = null;
             }
         }
+        #endregion
 
     }
 }
