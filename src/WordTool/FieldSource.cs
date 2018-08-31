@@ -16,6 +16,7 @@ namespace WordTool
         public WorldField(Guid oid)
         {
             Oid = oid;
+            FieldSourceList = new List<FieldSource>();
         }
 
         public Guid Oid { set; get; }
@@ -23,27 +24,44 @@ namespace WordTool
 
         public List<FieldSource> FieldSourceList { set; get; }
 
-
-        public int 
-
-
-
     }
     public class FieldSource
     {
-        public FieldSource(string sql)
+        public FieldSource(string sql, SoucreType soucreType)
         {
             SourceSql = sql;
+            SoucreType = soucreType;
+        }
+        public FieldSource(string sql, string tableName, SoucreType soucreType)
+        {
+            SourceSql = sql;
+            SoucreType = soucreType;
+            TableName = tableName;
         }
         /// <summary>
         /// 来源sql
         /// </summary>
         public string SourceSql { set; get; }
 
-        public string SoucreType { set; get; }
+        public SoucreType SoucreType { set; get; }
+
+        public string TableName { set; get; }
 
     }
 
+
+    public class Field
+    {
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public string Name { set; get; }
+        /// <summary>
+        /// 标识名称
+        /// </summary>
+
+        public string SignName { set; get; }
+    }
 
     public enum SoucreType
     {

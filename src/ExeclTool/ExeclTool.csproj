@@ -68,6 +68,7 @@
     <Compile Include="Model\ExeclColumnStyle.cs" />
     <Compile Include="Model\ExeclDTOBase.cs" />
     <Compile Include="Model\FreezePane.cs" />
+    <Compile Include="Model\PicturesInfo.cs" />
     <Compile Include="Model\WorkBookStyle.cs" />
     <Compile Include="StyleFromTemplateExeclHelper.cs" />
     <Compile Include="ProductImportExeclHelper.cs" />
