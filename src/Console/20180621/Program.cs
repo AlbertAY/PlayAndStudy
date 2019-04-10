@@ -19,7 +19,11 @@ namespace _20180621
             //});
             //Extend.ExtendTest(personList);
             //Extend.ExtendTest(new Person());
-            Extend.TestDynamic();
+            //Extend.TestDynamic();
+
+            List<Animal> AnimalList = new List<Animal>();
+            Animal aaa= AnimalList.Find(it => it.Eye == "12121212");
+
         }
 
     }
