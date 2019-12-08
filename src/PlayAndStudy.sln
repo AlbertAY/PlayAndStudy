@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseEncry", "Console\Da
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatatimeRadio", "Console\DatatimeRadio\DatatimeRadio.csproj", "{D9368D86-7FFF-4B78-8D1D-253F524B77FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMLApp", "MyMLApp\MyMLApp.csproj", "{41E72367-B56E-432A-8D06-9A1370FE230C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{D9368D86-7FFF-4B78-8D1D-253F524B77FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9368D86-7FFF-4B78-8D1D-253F524B77FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9368D86-7FFF-4B78-8D1D-253F524B77FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41E72367-B56E-432A-8D06-9A1370FE230C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41E72367-B56E-432A-8D06-9A1370FE230C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41E72367-B56E-432A-8D06-9A1370FE230C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41E72367-B56E-432A-8D06-9A1370FE230C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +75,7 @@ Global
 		{0989CE36-A308-4E58-AC60-AFEB8CAF7293} = {6837147A-6646-43D9-BCF3-6BF8FC4CC21F}
 		{DDB80718-7E11-4E6A-B11A-13AC47D3BA47} = {6BFFC5E4-BF04-474C-8606-177A590DF1D4}
 		{D9368D86-7FFF-4B78-8D1D-253F524B77FD} = {6BFFC5E4-BF04-474C-8606-177A590DF1D4}
+		{41E72367-B56E-432A-8D06-9A1370FE230C} = {6BFFC5E4-BF04-474C-8606-177A590DF1D4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {416D924C-46F5-4000-96EC-468E1408F5ED}
