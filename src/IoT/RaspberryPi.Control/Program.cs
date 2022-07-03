@@ -2,7 +2,7 @@
 using System.Device.Gpio;
 using System.Threading;
 
-int pin = 17;
+int pin = 18;
 int lightTime = 1000;
 int dimTime = 200;
 
