@@ -80,6 +80,9 @@ namespace RaspberryPi.Control
             finally
             {
                 controller.ClosePin(pinIndex);
+
+                Console.WriteLine("finally");
+
             }
         }
 
