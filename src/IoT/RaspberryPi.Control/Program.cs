@@ -38,7 +38,12 @@ namespace RaspberryPi.Control
 
             });
 
+            Console.WriteLine($"Start Get Tem");
+
             Task.Run(()=>Bme280Start());
+
+
+            Console.ReadLine();
 
             return 0;
 
@@ -52,7 +57,7 @@ namespace RaspberryPi.Control
 
             var deviceAddress = 1;
 
-            var i2cSettings = new I2cConnectionSettings(busId, deviceAddress);
+            var i2cSettings = new I2cConnectionSettings(busId, Bme280.DefaultI2cAddress);
 
             using var i2cDevice = I2cDevice.Create(i2cSettings);
 
@@ -64,8 +69,7 @@ namespace RaspberryPi.Control
 
 
             while (true)
-            {
-                Console.Clear();
+            {                
 
                 bme280.SetPowerMode(Bmx280PowerMode.Forced);
 
