@@ -54,7 +54,7 @@ namespace RaspberryPi.Control
         {
             Console.WriteLine("DHt11Start.......");
 
-            int pinIndex = 4;
+            int pinIndex = 7;
 
             using GpioController controller = new(PinNumberingScheme.Board);
 
