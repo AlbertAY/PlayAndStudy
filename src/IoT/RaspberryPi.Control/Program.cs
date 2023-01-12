@@ -13,30 +13,29 @@ namespace RaspberryPi.Control
         public static int Main(string[] args)
         {
 
-            int pin = 18;
-            int lightTime = 1000;
-            int dimTime = 200;
+            // int pin = 18;
+            // int lightTime = 1000;
+            // int dimTime = 200;
 
-            using GpioController controller = new();
-            controller.OpenPin(pin, PinMode.Output);
-            Console.WriteLine($"GPIO pin enabled: {pin}");
+            // using GpioController controller = new();
+            // controller.OpenPin(pin, PinMode.Output);
+            // Console.WriteLine($"GPIO pin enabled: {pin}");
 
+            // //控制二极管
+            // Task.Run(() =>
+            // {
+            //     while (true)
+            //     {
+            //         Console.WriteLine($"Light for {lightTime}ms");
+            //         controller.Write(pin, PinValue.High);
+            //         Thread.Sleep(lightTime);
 
-            //控制二极管
-            Task.Run(() =>
-            {
-                while (true)
-                {
-                    Console.WriteLine($"Light for {lightTime}ms");
-                    controller.Write(pin, PinValue.High);
-                    Thread.Sleep(lightTime);
+            //         Console.WriteLine($"Dim for {dimTime}ms");
+            //         controller.Write(pin, PinValue.Low);
+            //         Thread.Sleep(dimTime);
+            //     }
 
-                    Console.WriteLine($"Dim for {dimTime}ms");
-                    controller.Write(pin, PinValue.Low);
-                    Thread.Sleep(dimTime);
-                }
-
-            });
+            // });
 
             Console.WriteLine($"Start Get Tem");
 
@@ -97,11 +96,11 @@ namespace RaspberryPi.Control
 
             controller.Write(pinIndex, 0);
 
-            Thread.Sleep(100);
+            Thread.Sleep(18);
 
             controller.Write(pinIndex, 1);
 
-            Thread.Sleep(100);
+            WaitMicroseConds(40);
 
             controller.SetPinMode(pinIndex, PinMode.Input);
 
@@ -113,9 +112,9 @@ namespace RaspberryPi.Control
                 {
                     conter++;
 
-                    Thread.Sleep(100);
+                    WaitMicroseConds(1);
 
-                    if (conter == 100)
+                    if (conter == 255)
                     {
                         break;
                     }
@@ -123,7 +122,7 @@ namespace RaspberryPi.Control
 
                 lastState = controller.Read(pinIndex);
 
-                if (conter == 100)
+                if (conter == 255)
                 {
                     break;
                 }
@@ -153,6 +152,18 @@ namespace RaspberryPi.Control
                 return false;
             }
 
+        }
+
+
+
+        private static void WaitMicroseConds(int microseconds)
+        {
+            var until = DateTime.UtcNow.Ticks + microseconds * 10;
+
+            while(DateTime.UtcNow.Ticks < until)
+            {
+
+            }
         }
 
 
