@@ -95,7 +95,7 @@ namespace RaspberryPi.Control
             catch (System.Exception ex)
             {
                 
-                Console.WriteLine($"Error Message: {0}",ex);
+                Console.WriteLine($"Error Message: {0}, DetailInfo : {2}",ex.Message,ex.StackTrace);
             }
             
         }
