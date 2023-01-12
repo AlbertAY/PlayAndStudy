@@ -49,23 +49,23 @@ namespace RaspberryPi.Control
         }
 
         static int[] db11Data = { 0, 0, 0, 0, 0 };
+        static int pinIndex = 7;
+        static GpioController controller = new(PinNumberingScheme.Board);
         public static async void DHt11Start()
         {
             try
             {
                 Console.WriteLine("DHt11Start.......");
 
-                int pinIndex = 7;
 
-                using GpioController controller = new(PinNumberingScheme.Board);
 
                 controller.OpenPin(pinIndex);
 
-                while (ReadData(controller,pinIndex))
+                while (ReadData(controller, pinIndex))
                 {
                     await Task.Delay(1000);
 
-                    if(ReadData(controller,pinIndex))
+                    if (ReadData(controller, pinIndex))
                     {
                         Console.WriteLine("Read Data Success");
 
@@ -74,11 +74,13 @@ namespace RaspberryPi.Control
                 }
             }
             catch (System.Exception ex)
-            {                
-                Console.WriteLine($"DHt11Start Exception  Message{0} , Content : {1}",ex.Message,ex.StackTrace);
+            {
+                Console.WriteLine($"DHt11Start Exception  Message{0} , Content : {1}", ex.Message, ex.StackTrace);
             }
-
-            
+            finally
+            {
+                controller.ClosePin(pinIndex);
+            }
         }
 
 
@@ -94,11 +96,11 @@ namespace RaspberryPi.Control
 
             controller.SetPinMode(pinIndex, PinMode.Output);
 
-            controller.Write(pinIndex, 0);
+            controller.Write(pinIndex, PinValue.Low);
 
             Thread.Sleep(18);
 
-            controller.Write(pinIndex, 1);
+            controller.Write(pinIndex, PinValue.High);
 
             WaitMicroseConds(40);
 
@@ -160,7 +162,7 @@ namespace RaspberryPi.Control
         {
             var until = DateTime.UtcNow.Ticks + microseconds * 10;
 
-            while(DateTime.UtcNow.Ticks < until)
+            while (DateTime.UtcNow.Ticks < until)
             {
 
             }
