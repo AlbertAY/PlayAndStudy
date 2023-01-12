@@ -36,11 +36,25 @@ Task.Run(() =>
 
     var deviceAddress = 1;
 
-    var aaa = new I2cConnectionSettings(busId, deviceAddress);
+    var i2cSettings = new I2cConnectionSettings(busId, deviceAddress);
 
-    var bbb = I2cDevice.Create(aaa);
+    using var i2cDevice = I2cDevice.Create(i2cSettings);
 
-    var bme280 = new Bme280(bbb);
+    var bme280 = new Bme280(i2cDevice);
+
+    int measurementTime = bme280.GetMeasurementDuration();
+
+
+    while(true)
+    {
+        Console.Clear();
+
+        
+
+    }
 
 });
+
+
+Console.Read();
 
