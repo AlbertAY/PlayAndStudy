@@ -52,25 +52,34 @@ namespace RaspberryPi.Control
         static int[] db11Data = { 0, 0, 0, 0, 0 };
         public static async void DHt11Start()
         {
-            Console.WriteLine("DHt11Start.......");
-
-            int pinIndex = 7;
-
-            using GpioController controller = new(PinNumberingScheme.Board);
-
-            controller.OpenPin(pinIndex);
-
-            while (ReadData(controller,pinIndex))
+            try
             {
-                await Task.Delay(1000);
+                Console.WriteLine("DHt11Start.......");
 
-                if(ReadData(controller,pinIndex))
+                int pinIndex = 7;
+
+                using GpioController controller = new(PinNumberingScheme.Board);
+
+                controller.OpenPin(pinIndex);
+
+                while (ReadData(controller,pinIndex))
                 {
-                    Console.WriteLine("Read Data Success");
+                    await Task.Delay(1000);
 
-                    Console.WriteLine($"湿度：{db11Data[0]}.{db11Data[0]}%   温度");
+                    if(ReadData(controller,pinIndex))
+                    {
+                        Console.WriteLine("Read Data Success");
+
+                        Console.WriteLine($"湿度：{db11Data[0]}.{db11Data[0]}%   温度");
+                    }
                 }
             }
+            catch (System.Exception ex)
+            {                
+                Console.WriteLine($"DHt11Start Exception  Message{0} , Content : {1}",ex.Message,ex.StackTrace);
+            }
+
+            
         }
 
 
