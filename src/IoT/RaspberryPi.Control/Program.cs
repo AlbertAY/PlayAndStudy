@@ -40,7 +40,7 @@ namespace RaspberryPi.Control
 
             Console.WriteLine($"Start Get Tem");
 
-            Task.Run(() => Bme280Start());
+            Task.Run(() => DHt11Start());
 
 
             Console.ReadLine();
@@ -50,12 +50,11 @@ namespace RaspberryPi.Control
         }
 
         static int[] db11Data = { 0, 0, 0, 0, 0 };
-        public static async void DHt11tart()
+        public static async void DHt11Start()
         {
+            Console.WriteLine("DHt11Start.......");
+
             int pinIndex = 2;
-
-
-
 
             using GpioController controller = new(PinNumberingScheme.Board);
 
