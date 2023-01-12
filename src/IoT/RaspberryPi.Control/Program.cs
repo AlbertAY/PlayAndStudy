@@ -53,7 +53,10 @@ namespace RaspberryPi.Control
 
         public static void Bme280Start()
         {
-            var busId = 1;
+
+            try
+            {
+                var busId = 1;
 
             var i2cSettings = new I2cConnectionSettings(busId, Bme280.DefaultI2cAddress);
 
@@ -70,7 +73,7 @@ namespace RaspberryPi.Control
             {                
 
                 Console.WriteLine($"BBBBB");
-                
+
                 bme280.SetPowerMode(Bmx280PowerMode.Forced);
 
                 Thread.Sleep(measurementTime);
@@ -88,7 +91,12 @@ namespace RaspberryPi.Control
                 Thread.Sleep(1000);
 
             }
-
+            }
+            catch (System.Exception ex)
+            {
+                
+                Console.WriteLine($"Error Message: {0}",ex);
+            }
             
         }
     }
