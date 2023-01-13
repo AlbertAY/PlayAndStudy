@@ -49,7 +49,7 @@ namespace RaspberryPi.Control
         }
 
         static int[] db11Data = { 0, 0, 0, 0, 0 };
-        static int pinIndex = 7;
+        static int pinIndex = 17;
         static GpioController controller = new(PinNumberingScheme.Board);
         public static async void DHt11Start()
         {
@@ -187,7 +187,6 @@ namespace RaspberryPi.Control
 
                 int measurementTime = bme280.GetMeasurementDuration();
 
-
                 Console.WriteLine($"AAAAAA");
 
                 while (true)
@@ -215,7 +214,6 @@ namespace RaspberryPi.Control
             }
             catch (System.Exception ex)
             {
-
                 Console.WriteLine($"Error Message: {0}, DetailInfo : {2}", ex.Message, ex.StackTrace);
             }
 
