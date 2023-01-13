@@ -49,7 +49,7 @@ namespace RaspberryPi.Control
         }
 
         static int[] db11Data = { 0, 0, 0, 0, 0 };
-        static int pinIndex = 17;
+        static int pinIndex = 18;
         static GpioController controller = new(PinNumberingScheme.Board);
         public static async void DHt11Start()
         {
