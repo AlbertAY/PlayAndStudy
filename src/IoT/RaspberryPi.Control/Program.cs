@@ -57,9 +57,10 @@ namespace RaspberryPi.Control
             {
                 Console.WriteLine("DHt11Start.......");
 
-
-
-                controller.OpenPin(pinIndex);
+                if(!controller.IsPinOpen(pinIndex))
+                {
+                    controller.OpenPin(pinIndex);
+                }                
 
                 while (ReadData(controller, pinIndex))
                 {
@@ -79,10 +80,12 @@ namespace RaspberryPi.Control
             }
             finally
             {
-                controller.ClosePin(pinIndex);
+                if(controller.IsPinOpen(pinIndex))
+                {
+                    controller.ClosePin(pinIndex);
+                }
 
                 Console.WriteLine("finally");
-
             }
         }
 
