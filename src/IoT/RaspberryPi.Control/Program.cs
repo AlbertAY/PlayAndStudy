@@ -106,6 +106,8 @@ namespace RaspberryPi.Control
 
             controller.SetPinMode(pinIndex, PinMode.Output);
 
+            Console.WriteLine("controller PinMode {0} PinMode.Output",PinMode.Output);
+
             controller.Write(pinIndex, PinValue.Low);
 
             Console.WriteLine("controller.Write {0} PinValue.Low",pinIndex);
@@ -178,12 +180,16 @@ namespace RaspberryPi.Control
 
         private static void WaitMicroseConds(int microseconds)
         {
-            var until = DateTime.UtcNow.Ticks + microseconds * 10;
+            Console.WriteLine($"Start Wait MicroseConds ........");
+
+            var until = DateTime.UtcNow.Ticks + (microseconds * 10);
 
             while (DateTime.UtcNow.Ticks < until)
             {
 
             }
+
+            Console.WriteLine($"End Wait MicroseConds ........");
         }
 
 
