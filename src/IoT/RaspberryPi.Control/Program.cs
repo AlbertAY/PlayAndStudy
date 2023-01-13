@@ -60,6 +60,8 @@ namespace RaspberryPi.Control
                 if(!controller.IsPinOpen(pinIndex))
                 {
                     controller.OpenPin(pinIndex);
+
+                    Console.WriteLine("打开PingIndex {0}",pinIndex);
                 }                
 
                 while (ReadData(controller, pinIndex))
@@ -83,6 +85,8 @@ namespace RaspberryPi.Control
                 if(controller.IsPinOpen(pinIndex))
                 {
                     controller.ClosePin(pinIndex);
+
+                    Console.WriteLine("关闭PingIndex {0}",pinIndex);
                 }
 
                 Console.WriteLine("finally");
@@ -104,13 +108,19 @@ namespace RaspberryPi.Control
 
             controller.Write(pinIndex, PinValue.Low);
 
+            Console.WriteLine("controller.Write {0} PinValue.Low",pinIndex);
+
             Thread.Sleep(18);
 
             controller.Write(pinIndex, PinValue.High);
 
+            Console.WriteLine("controller.Write {0} PinValue.High",pinIndex);
+
             WaitMicroseConds(40);
 
             controller.SetPinMode(pinIndex, PinMode.Input);
+
+            Console.WriteLine("controller PinMode {0} PinMode.Input",PinMode.Input);
 
             for (i = 0; i < 85; i++)
             {
@@ -129,6 +139,8 @@ namespace RaspberryPi.Control
                 }
 
                 lastState = controller.Read(pinIndex);
+
+                Console.WriteLine("lastState Value {0}",lastState);
 
                 if (conter == 255)
                 {
