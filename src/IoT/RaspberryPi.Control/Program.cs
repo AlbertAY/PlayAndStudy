@@ -180,7 +180,7 @@ namespace RaspberryPi.Control
 
         private static void WaitMicroseConds(int microseconds)
         {
-            Console.WriteLine($"Start Wait MicroseConds ........");
+            Console.WriteLine($"Start Wait MicroseConds: {microseconds} ........");
 
             var until = DateTime.UtcNow.Ticks + (microseconds * 10);
 
@@ -189,7 +189,7 @@ namespace RaspberryPi.Control
 
             }
 
-            Console.WriteLine($"End Wait MicroseConds ........");
+            Console.WriteLine($"End Wait MicroseConds: {microseconds} ........");
         }
 
 
