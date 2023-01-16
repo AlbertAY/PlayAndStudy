@@ -14,7 +14,7 @@ namespace RaspberryPi.Control
         {
             Console.WriteLine($"Start The Programe!");
 
-            Task.Run(() => UnosquareRead.TestLedBlinking());
+            UnosquareRead.TestLedBlinking();
 
 
             Console.WriteLine($"End The Programe!");    
