@@ -7,13 +7,22 @@ using Iot.Device.Bmxx80.PowerMode;
 using System.Threading.Tasks;
 using Unosquare.RaspberryIO;
 using Unosquare.RaspberryIO.Abstractions;
+using Unosquare.WiringPi;
 
 namespace RaspberryPi.Control
 {
     public class UnosquareRead
     {
+
+        public static void Init()
+        {
+            Pi.Init<BootstrapWiringPi>();
+        }
+
         public static void TestLedBlinking()
         {
+            Init();
+
             var blinkingPin = Pi.Gpio[BcmPin.Gpio17];
 
             // Configure the pin as an output
@@ -26,7 +35,7 @@ namespace RaspberryPi.Control
                 Console.WriteLine("isOn:{0}",isOn);
 
                 isOn = !isOn;
-                
+
                 blinkingPin.Write(isOn);
 
                 Console.WriteLine("isOn:{0}",isOn);
