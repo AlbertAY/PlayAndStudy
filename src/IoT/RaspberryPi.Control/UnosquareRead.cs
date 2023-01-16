@@ -14,10 +14,7 @@ namespace RaspberryPi.Control
     {
         public static void TestLedBlinking()
         {
-            // Get a reference to the pin you need to use.
-            // Both methods below are equivalent
-            var blinkingPin = Pi.Gpio[17];
-            blinkingPin = Pi.Gpio[BcmPin.Gpio17];
+            var blinkingPin = Pi.Gpio[BcmPin.Gpio17];
 
             // Configure the pin as an output
             blinkingPin.PinMode = GpioPinDriveMode.Output;
@@ -26,9 +23,17 @@ namespace RaspberryPi.Control
             var isOn = false;
             for (var i = 0; i < 20; i++)
             {
+                Console.WriteLine("isOn:{0}",isOn);
+
                 isOn = !isOn;
+                
                 blinkingPin.Write(isOn);
+
+                Console.WriteLine("isOn:{0}",isOn);
+
                 System.Threading.Thread.Sleep(500);
+                
+                Console.WriteLine("Thread Sleep End");
             }
         }
     }
