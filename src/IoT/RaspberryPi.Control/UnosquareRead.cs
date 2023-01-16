@@ -45,6 +45,22 @@ namespace RaspberryPi.Control
                 Console.WriteLine("Thread Sleep End");
             }
         }
+
+
+        public static void ReadDHT11()
+        {            
+            var pin = (GpioPin)Pi.Gpio[BcmPin.Gpio18];
+
+            pin.PinMode = GpioPinDriveMode.Input;
+
+            pin.RegisterInterruptCallback(EdgeDetection.FallingEdge, ISRCallback);
+
+        }
+
+        static void ISRCallback()
+        {
+            Console.WriteLine("Pin Activated...");         
+        }
     }
 }
 
