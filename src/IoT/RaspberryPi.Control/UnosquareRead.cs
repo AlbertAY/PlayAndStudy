@@ -48,7 +48,9 @@ namespace RaspberryPi.Control
 
 
         public static void ReadDHT11()
-        {            
+        {          
+            Init();
+
             var pin = (GpioPin)Pi.Gpio[BcmPin.Gpio18];
 
             pin.PinMode = GpioPinDriveMode.Input;
