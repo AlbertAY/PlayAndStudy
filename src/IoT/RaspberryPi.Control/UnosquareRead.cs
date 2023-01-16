@@ -52,8 +52,12 @@ namespace RaspberryPi.Control
             var pin = (GpioPin)Pi.Gpio[BcmPin.Gpio18];
 
             pin.PinMode = GpioPinDriveMode.Input;
+            
+            Console.WriteLine("Start ISRCallback");
 
             pin.RegisterInterruptCallback(EdgeDetection.FallingEdge, ISRCallback);
+
+            Console.WriteLine("End ISRCallback");
 
         }
 
